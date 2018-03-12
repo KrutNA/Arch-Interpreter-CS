@@ -12,89 +12,187 @@ namespace Architecture.Interpreter
         public bool isError;
         private int curLine;
 
-        public Interpreter() { }
+        int _instructionPointer;
+        byte[] _ram;
 
-        public void DoInterpretation(ref byte[] ram)
+        public Interpreter(byte[] ram)
         {
-            int endOfBinary = ram.Length;
+            this._ram = ram;
+        }
+
+        public void DoInterpretation()
+        {
+            int endOfBinary = _ram.Length;
             var alternatives = new Alternative();
             curLine = 1;
             isError = false;
-            
-            for (int i = endOfRegs; i < endOfBinary; i++)
+
+            _instructionPointer = endOfRegs;
+            //for (int i = endOfRegs; i < endOfBinary; i++)
+            while (_instructionPointer < endOfBinary)
             {
-                i = Interpret(ref ram, endOfBinary, i, ref alternatives);
-                if (breakPoint || i == errorNum)
+                var isOk = TryInterpret(endOfBinary, ref alternatives);
+                if (breakPoint || !isOk)
                 {
                     isError = true;
                     break;
                 }
                 curLine++;
+                _instructionPointer++;
             }
         }
 
-        private int Interpret(ref byte[] ram, int endOfBinary, int curByte, ref Alternative alternatives)
+        private bool TryInterpret(int endOfBinary, ref Alternative alternatives)
         {
             bool isError = false;
-            byte command = ram[curByte];
+            byte command = _ram[_instructionPointer];
             byte[] instrArray;
             if (command == CommandCode.EXT || command == CommandCode.BRP)
-                return errorNum;
+                return false;
 
-            byte mod = GetMOD(ref curByte, command, ref ram, ref isError);
+            byte mod = GetMOD(command, ref isError);
             if (isError)
-                return errorNum;
+                return false;
 
             if (mod == 0)
-                return curByte;
+                return true;
 
-            instrArray = alternatives.ReadAlternative( mod, ref curByte, ref ram, curLine );
+            instrArray = alternatives.ReadAlternative(mod, ref _instructionPointer, ref _ram, curLine);
 
             var modInstructions = new MODInstruction();
-            if (modInstructions.Execute(instrArray, command, mod, ref ram))
-                return errorNum;
-            
-            return curByte;
+            if (modInstructions.Execute(instrArray, command, mod, ref _ram))
+                return false;
+
+            return true;
         }
 
-        private byte GetMOD( ref int curByte, byte command, ref byte[] ram, ref bool isError)
+        private byte GetMOD(byte command, ref bool isError)
         {
 
-            var specificInstruction = new SpecificInstruction();
-            switch (command) {
+            // var specificInstruction = new SpecificInstruction();
+            switch (command)
+            {
                 case CommandCode.NOP:
                     return 0;
                 case CommandCode.JMP:
-                    specificInstruction.ExecuteJump( ref curByte, ref ram );
+                    this.ExecuteJump();
                     return 0;
                 case CommandCode.JE:
-                    specificInstruction.ExecuteConditionJump( ref curByte, ref ram, true );
+                    this.ExecuteConditionJump(true);
                     return 0;
                 case CommandCode.JNE:
-                    specificInstruction.ExecuteConditionJump( ref curByte, ref ram, false );
+                    this.ExecuteConditionJump(false);
                     return 0;
                 case CommandCode.ETR:
                     Console.WriteLine();
                     return 0;
                 case CommandCode.IN:
-                    specificInstruction.ExecuteStream( ref curByte, ref ram, true, ref isError );
+                    this.ExecuteStream(true, ref isError);
                     return 0;
                 case CommandCode.OUT:
-                    specificInstruction.ExecuteStream( ref curByte, ref ram, false, ref isError );
+                    this.ExecuteStream(false, ref isError);
                     return 0;
                 case CommandCode.ALLOC:
-                    specificInstruction.ExecuteAllocate( ref curByte, ref ram, true, ref isError);
+                    this.ExecuteAllocate(true, ref isError);
                     return 0;
                 case CommandCode.ALLOCr:
-                    specificInstruction.ExecuteAllocate( ref curByte, ref ram, false, ref isError );
+                    this.ExecuteAllocate(false, ref isError);
                     return 0;
                 case CommandCode.INC:
                     return Alternative.rmMOD2_;
                 case CommandCode.DEC:
                     return Alternative.rmMOD2_;
                 default:
-                    return ram[++curByte];
+                    return _ram[++_instructionPointer];
             }
-        } 
+        }
+
+
+        private void ExecuteJump()
+        {
+            _instructionPointer = BitConverter.ToInt16(_ram, ++_instructionPointer) + Alternative.regs - 1;
+            return;
+        }
+
+        // JE - true
+        // JNE - false
+        private void ExecuteConditionJump(bool onEquality)
+        {
+            short regVal = BitConverter.ToInt16(_ram, (_ram[++_instructionPointer] - Alternative.reg) * 2);
+            bool result = regVal != 0;
+
+            if (result && onEquality)
+                _instructionPointer = BitConverter.ToInt16(_ram, ++_instructionPointer) + Alternative.regs - 1;
+            else if (!result && !onEquality)
+                _instructionPointer = BitConverter.ToInt16(_ram, ++_instructionPointer) + Alternative.regs - 1;
+            else
+                _instructionPointer += 2;
+            return;
+        }
+
+        // IN - true
+        // OUT - false
+        private void ExecuteStream(bool streamMod, ref bool isError)
+        {
+            try
+            {
+                if (streamMod)
+                {
+                    byte[] temp = BitConverter.GetBytes(Convert.ToInt16(Console.ReadLine()));
+                    Array.Copy(temp, 0, _ram, (_ram[++_instructionPointer] - Alternative.reg) * 2, 2);
+                }
+                else
+                {
+                    short temp = BitConverter.ToInt16(_ram, (_ram[++_instructionPointer] - Alternative.reg) * 2);
+                    Console.Write($"{temp} ");
+                }
+            }
+            catch
+            {
+                ErrorHandler.DisplayError(31);
+                isError = true;
+                return;
+            }
+        }
+
+        //  val - true
+        //  reg - false
+        private void ExecuteAllocate(bool allocateMod, ref bool isError)
+        {
+            try
+            {
+                byte[] length = BitConverter.GetBytes(Convert.ToInt16(_ram.Length));
+                byte tempB = _ram[++_instructionPointer];
+                short tempS;
+
+                if (allocateMod)
+                {
+                    tempS = BitConverter.ToInt16(_ram, ++_instructionPointer);
+                    _instructionPointer++;
+                }
+                else
+                {
+                    tempS = BitConverter.ToInt16(_ram, (_ram[++_instructionPointer] - Alternative.reg) * 2);
+                }
+
+                Array.Resize(ref _ram, _ram.Length + tempS);
+
+                if (_ram.Length >= short.MaxValue)
+                {
+                    ErrorHandler.DisplayError(63);
+                    isError = true;
+                    return;
+                }
+
+                Array.Copy(length, 0, _ram, (tempB - Alternative.reg) * 2, 2);
+                return;
+            }
+            catch
+            {
+                ErrorHandler.DisplayError(63);
+                isError = true;
+                return;
+            }
+        }
     }
 }

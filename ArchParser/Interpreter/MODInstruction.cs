@@ -9,8 +9,7 @@ namespace Architecture.Interpreter
         private const string val = "val";
         private const string ptr = "ptr";
 
-        private IReadOnlyDictionary<byte, Func<short, short, short>> commands =
-            new Dictionary<byte, Func<short, short, short>>
+        private IReadOnlyDictionary<byte, Func<short, short, short>> commands = new Dictionary<byte, Func<short, short, short>>
         {
             { CommandCode.ADD, (x, y) => Convert.ToInt16(x + y) },
             { CommandCode.SUB, (x, y) => Convert.ToInt16(x - y) },
@@ -53,8 +52,7 @@ namespace Architecture.Interpreter
             }
         }
 
-        private IReadOnlyDictionary<byte, Values> values =
-            new Dictionary<byte, Values>
+        private IReadOnlyDictionary<byte, Values> values = new Dictionary<byte, Values>
         {
             { Alternative.rmMODr, new Values( reg, null) },
             { Alternative.rmMODv, new Values( val, null) },
@@ -77,7 +75,7 @@ namespace Architecture.Interpreter
         };
 
         public MODInstruction() { }
-        
+
         public bool Execute(byte[] instrArray, byte command, byte mod, ref byte[] ram)
         {
             bool isPointer = false;
@@ -114,7 +112,7 @@ namespace Architecture.Interpreter
             return isError;
         }
 
-        private short[] GetValues( ref byte[] ram, byte[] instrArray,  string[] valueTypes, ref bool isPointer)
+        private short[] GetValues(ref byte[] ram, byte[] instrArray, string[] valueTypes, ref bool isPointer)
         {
             short[] values = new short[2];
             byte[] byteArray = new byte[4];
@@ -157,7 +155,7 @@ namespace Architecture.Interpreter
                 }
             return values;
         }
-        
+
         private short ExecuteByParameter(short[] Values, Func<short, short, short> parameterFunction)
         {
             return Convert.ToInt16(parameterFunction(Values[0], Values[1]));

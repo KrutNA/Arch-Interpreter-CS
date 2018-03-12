@@ -62,7 +62,6 @@
     <Compile Include="Interpreter\MODInstruction.cs" />
     <Compile Include="Interpreter\Interpreter.cs" />
     <Compile Include="Interpreter\ErrorHandler.cs" />
-    <Compile Include="Interpreter\SpecificInstruction.cs" />
     <Compile Include="Parser\BinaryParser.cs" />
     <Compile Include="Interpreter\CommandCode.cs" />
     <Compile Include="Parser\Blob.cs" />

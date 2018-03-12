@@ -58,21 +58,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interpreter\Alternatives.cs" />
-    <Compile Include="Interpreter\MODInstructions.cs" />
+    <Compile Include="Interpreter\Alternative.cs" />
+    <Compile Include="Interpreter\MODInstruction.cs" />
     <Compile Include="Interpreter\Interpreter.cs" />
     <Compile Include="Interpreter\ErrorHandler.cs" />
-    <Compile Include="Interpreter\OtherInstructions.cs" />
+    <Compile Include="Interpreter\SpecificInstruction.cs" />
     <Compile Include="Parser\BinaryParser.cs" />
-    <Compile Include="Interpreter\CommandCodes.cs" />
-    <Compile Include="Parser\Blobs.cs" />
-    <Compile Include="Parser\SourceCodePoints.cs" />
-    <Compile Include="Parser\SourceTextRanges.cs" />
-    <Compile Include="Parser\SourceFiles.cs" />
-    <Compile Include="Parser\Strings.cs" />
-    <Compile Include="Parser\Symbols.cs" />
+    <Compile Include="Interpreter\CommandCode.cs" />
+    <Compile Include="Parser\Blob.cs" />
+    <Compile Include="Parser\SourceCodePoint.cs" />
+    <Compile Include="Parser\SourceTextRange.cs" />
+    <Compile Include="Parser\SourceFile.cs" />
+    <Compile Include="Parser\String.cs" />
+    <Compile Include="Parser\Symbol.cs" />
     <Compile Include="Parser\TableHeader.cs" />
-    <Compile Include="Parser\Sections.cs" />
+    <Compile Include="Parser\Section.cs" />
     <Compile Include="Parser\ModuleHeader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

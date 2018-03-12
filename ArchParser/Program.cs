@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Threading;
-using System.Collections.Generic;
 using System.IO;
 using Architecture.Parser;
-using Architecture.Interpreter;
 
 namespace Architecture
 {
@@ -11,7 +8,7 @@ namespace Architecture
     {
         public static void Main(string[] args)
         {
-            byte[] ram = new byte[65];
+            byte[] ram = new byte[66];
 
             Console.Title = "KrutNA's Interpreter";
             Console.Write("Path: ");
@@ -33,7 +30,7 @@ namespace Architecture
                 binaryParser = new BinaryParser();
                 binaryParser.ReadBytes(reader, ref ram);
             }
-
+            
             var interpreter = new Interpreter.Interpreter();
             interpreter.DoInterpretation(ref ram);
 
@@ -43,7 +40,6 @@ namespace Architecture
             Console.Write("\nDone!\n" +
                           "Press any key to continue...");
             Console.ReadKey();
-
         }
     }
 }

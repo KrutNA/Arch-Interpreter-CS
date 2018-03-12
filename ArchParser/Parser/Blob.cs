@@ -3,12 +3,12 @@ using System.IO;
 
 namespace Architecture.Parser
 {
-    public class Blobs
+    public class Blob
     {
         public Int32 blobLength { get; private set; }
         public byte[] blob { get; private set; }
         
-        public Blobs() { }
+        public Blob() { }
         
         public void ReadLength(BinaryReader reader)
         {

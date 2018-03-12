@@ -1,6 +1,6 @@
 ﻿namespace Architecture.Interpreter
 {
-    public static class CommandCodes
+    public static class CommandCode
     {
         //
         // Main commands

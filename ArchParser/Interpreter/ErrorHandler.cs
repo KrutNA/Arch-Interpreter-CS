@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Architecture.Interpreter
 {
@@ -8,7 +9,7 @@ namespace Architecture.Interpreter
 
         public static void DisplayError(int code = 0, int line = 0, int argNum = 0)
         {
-            var codeDescription = GetDescription(code);
+            var codeDescription = descriptions[code];
             const int errorSeparator = 19;
 
             var lineText = code != 0 ? line.ToString() : "Unknown";
@@ -24,35 +25,19 @@ namespace Architecture.Interpreter
             return;
         }
 
-        private static string GetDescription(int code)
+        private static readonly IReadOnlyDictionary<int, string> descriptions = new Dictionary<int, string>()
         {
-            switch (code)
-            {
-                case 0:
-                    return "File not founded";
-                case 1:
-                    return "Out of memory";
-                case 2:
-                    return "Input error";
-                case 20:
-                    return "Register not found";
-                case 21:
-                    return "Register error";
-                case 30:
-                    return "Value error";
-                case 31:
-                    return "Overflow";
-                case 60:
-                    return "Unknown argument";
-                case 61:
-                    return "Unknown command";
-                case 62:
-                    return "Unknown alternative";
-                case 63:
-                    return "Can't allocate memory";
-                default:
-                    return "Unknown";
-            }
-        }
+            { 0, "File not founded" },
+            { 1, "Out of memory" },
+            { 2, "Input error" },
+            { 20, "Register not found" },
+            { 21, "Register error" },
+            { 30, "Value error" },
+            { 31, "Overflow" },
+            { 60, "Unknown argument" },
+            { 61, "Unknown command" },
+            { 62, "Unknown alternative" },
+            { 63, "Can't allocate memory" }
+        };
     }
 }

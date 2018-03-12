@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Architecture.Parser
 {
-    public class Sections
+    public class Section
     {
         public Int32 blobIndex { get; private set; }
         public Int32 symbolsCount { get; private set; }
@@ -12,7 +12,7 @@ namespace Architecture.Parser
         public Int32 customSectionNameIn { get; private set; }
         public Int16 accessMode { get; private set; }
 
-        public Sections() { }
+        public Section() { }
 
         public void Read(BinaryReader reader)
         {

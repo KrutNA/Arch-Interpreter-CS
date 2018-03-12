@@ -3,12 +3,12 @@ using System.IO;
 
 namespace Architecture.Parser
 {
-    public class Strings
+    public class String
     {
         public Int32 strLength { get; private set; }
         public byte[] str { get; private set; }
 
-        public Strings() { }
+        public String() { }
 
         public void Read(BinaryReader reader)
         {

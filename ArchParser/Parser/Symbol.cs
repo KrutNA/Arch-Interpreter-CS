@@ -3,13 +3,13 @@ using System.IO;
 
 namespace Architecture.Parser
 {
-    public class Symbols
+    public class Symbol
     {
         public Int32 sectionIndex { get; private set; }
         public Int64 blobEntryIndex { get; private set; }
         public Int32 nameIndex { get; private set; }
 
-        public Symbols() { }
+        public Symbol() { }
 
         public void Read(BinaryReader reader)
         {

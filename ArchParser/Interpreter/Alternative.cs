@@ -2,11 +2,10 @@
 
 namespace Architecture.Interpreter
 {
-    class Alternatives
+    class Alternative
     {
-        public Alternatives() { }
-
-        public const int reg = 0b10111111;
+        public const int regs = 66;
+        public const int reg = 0b11000000;
         //
         // rmMOD
         //
@@ -63,6 +62,9 @@ namespace Architecture.Interpreter
             { rmMOD3p_, 2 },      //p_
             { rmMODo,   2 }       //o
         };
+        
+        public Alternative() { }
+
         //
         //  Gets mod and return array of bytes
         //

@@ -3,12 +3,12 @@ using System.IO;
 
 namespace Architecture.Parser
 {
-    public class SourceCodePoints
+    public class SourceCodePoint
     {
         public Int64 address { get; private set; }
         public Int32 sourceOperationRangeIndex { get; private set; }
 
-        public SourceCodePoints() { }
+        public SourceCodePoint() { }
 
         public void Read(BinaryReader reader)
         {

@@ -3,12 +3,12 @@ using System.IO;
 
 namespace Architecture.Parser
 {
-    public class SourceFiles
+    public class SourceFile
     {
         public Int32 fileNameIndex { get; private set; }
         public Int32 sha256hashBytesIndex { get; private set; }
 
-        public SourceFiles() { }
+        public SourceFile() { }
 
         public void Read(BinaryReader reader)
         {

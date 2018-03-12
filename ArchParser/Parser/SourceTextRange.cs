@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Architecture.Parser
 {
-    public class SourceTextRanges
+    public class SourceTextRange
     {
         public Int32 sourceFileIndex { get; private set; }
         public Int32 position { get; private set; }
@@ -11,7 +11,7 @@ namespace Architecture.Parser
         public Int32 line { get; private set; }
         public Int32 column { get; private set; }
 
-        public SourceTextRanges() { }
+        public SourceTextRange() { }
 
         public void Read(BinaryReader reader)
         {
